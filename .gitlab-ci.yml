@@ -1,3 +1,4 @@
 include:
   - project: 'videocore/gitlab-templates'
+    ref: CS-2842
     file: 'encore.yml'

@@ -3,18 +3,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     idea
     jacoco
-    id("org.springframework.boot") version "2.4.2"
+    id("org.springframework.boot") version "2.5.2"
     id("se.ascp.gradle.gradle-versions-filter") version "0.1.6"
-    kotlin("jvm") version "1.5.10"
-    kotlin("plugin.spring") version "1.5.10"
+    kotlin("jvm") version "1.5.20"
+    kotlin("plugin.spring") version "1.5.20"
     id("com.github.fhermansson.assertj-generator") version "1.1.2"
-    id("org.jmailen.kotlinter") version "3.3.0"
+    id("org.jmailen.kotlinter") version "3.4.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("pl.allegro.tech.build.axion-release") version "1.13.2"
+    id("pl.allegro.tech.build.axion-release") version "1.13.3"
 
     //openapi generation
     id("com.github.johnrengelman.processes") version "0.5.0"
-    id("org.springdoc.openapi-gradle-plugin") version "1.3.1"
+    id("org.springdoc.openapi-gradle-plugin") version "1.3.2"
 }
 
 apply(from = "checks.gradle")
@@ -60,13 +60,14 @@ configurations {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2020.0.1")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2020.0.3")
     }
 }
 
+val redissonVersion = "3.16.0"
+
 dependencies {
     implementation("se.svt.oss:media-analyzer:1.0.3")
-    implementation("se.svt.oss:redisson-starter:1.1.3")
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     implementation("com.lmax:disruptor:3.4.2")
@@ -80,12 +81,13 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
-    implementation("org.redisson:redisson-spring-data-24:3.14.1") // match boot version an redisson version from redisson-starter
-    implementation("io.github.microutils:kotlin-logging:2.0.4")
+    implementation("org.redisson:redisson-spring-boot-starter:$redissonVersion")
+    implementation("org.redisson:redisson-spring-data-25:$redissonVersion") // match boot version
+    implementation("io.github.microutils:kotlin-logging:2.0.8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.5.0")
 
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("io.github.openfeign:feign-okhttp")
@@ -93,18 +95,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
     //openapi generation
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.5")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.5")
-    implementation("org.springdoc:springdoc-openapi-data-rest:1.5.5")
-    implementation("org.springdoc:springdoc-openapi-hateoas:1.5.5")
+    implementation("org.springdoc:springdoc-openapi-ui:1.5.9")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.9")
+    implementation("org.springdoc:springdoc-openapi-data-rest:1.5.9")
+    implementation("org.springdoc:springdoc-openapi-hateoas:1.5.9")
 
     testImplementation("se.svt.oss.junit5:junit5-redis-extension:2.0.3")
     testImplementation("se.svt.oss:random-port-initializer:1.0.5")
-    testImplementation("org.awaitility:awaitility:4.0.3")
+    testImplementation("org.awaitility:awaitility:4.1.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.assertj:assertj-core")
-    testImplementation("io.mockk:mockk:1.10.5")
+    testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:3.14.4")//shall match with okhttp version used
     testImplementation("com.ninja-squad:springmockk:3.0.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
