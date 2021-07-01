@@ -20,7 +20,7 @@ plugins {
 apply(from = "checks.gradle")
 
 group = "se.svt.oss"
-project.version = scmVersion.version
+//project.version = scmVersion.version
 
 assertjGenerator {
     classOrPackageNames = arrayOf(
