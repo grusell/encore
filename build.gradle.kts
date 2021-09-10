@@ -20,7 +20,6 @@ plugins {
 apply(from = "checks.gradle")
 
 group = "se.svt.oss"
-//project.version = scmVersion.version
 
 assertjGenerator {
     classOrPackageNames = arrayOf(
@@ -69,7 +68,6 @@ dependencies {
     implementation("se.svt.oss:media-analyzer:1.0.3")
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
-    implementation("com.lmax:disruptor:3.4.2")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
