@@ -66,7 +66,6 @@ val redissonVersion = "3.16.2"
 
 dependencies {
     implementation("se.svt.oss:media-analyzer:1.0.3")
-    implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -97,7 +96,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-data-rest:1.5.10")
     implementation("org.springdoc:springdoc-openapi-hateoas:1.5.10")
 
-    testImplementation("se.svt.oss.junit5:junit5-redis-extension:2.0.3")
+    testImplementation("se.svt.oss:junit5-redis-extension:3.0.0")
     testImplementation("se.svt.oss:random-port-initializer:1.0.5")
     testImplementation("org.awaitility:awaitility:4.1.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

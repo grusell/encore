@@ -9,7 +9,6 @@ jacocoTestCoverageVerification {
                     '*.DefaultConstructorMarker*',
                     '*.EncoreApplicationKt.*',
                     '*.static {...}',
-                    '*.QueueItem*',
                     '*.model.*.*.get*',
                     '*.service.localencode.LocalEncodeService.moveFile*'
             ]
