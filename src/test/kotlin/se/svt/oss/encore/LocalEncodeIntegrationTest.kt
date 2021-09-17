@@ -4,13 +4,11 @@
 
 package se.svt.oss.encore
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.test.context.ActiveProfiles
 import java.io.File
 
-@Disabled
 @ActiveProfiles("test-local")
 class LocalEncodeIntegrationTest : EncoreIntegrationTestBase() {
 

@@ -11,6 +11,11 @@ jacocoTestCoverageVerification {
                     '*.static {...}',
                     '*.model.*.*.get*',
                     '*.service.localencode.LocalEncodeService.moveFile*'
+                    // For keda-POC
+                    ,
+                    '*.SingleJobPoller.*',
+                    '*.JobProcessor.*',
+                    '*.EncoreProperties.*'
             ]
             limit {
                 counter = 'LINE'

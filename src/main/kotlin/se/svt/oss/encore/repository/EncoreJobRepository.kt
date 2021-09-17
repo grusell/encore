@@ -15,6 +15,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import se.svt.oss.encore.model.EncoreJob
 import se.svt.oss.encore.model.Status
 
+@Profile("singlejobworker")
 interface EncoreJobRepository : PagingAndSortingRepository<EncoreJob, UUID> {
 
     @Operation(summary = "Find EncoreJobs By Status", description = "Returns EncoreJobs according to the given Status")
