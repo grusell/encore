@@ -18,7 +18,8 @@ data class EncoreProperties(
     val pollDelay: Duration = Duration.ofSeconds(5),
     val redisKeyPrefix: String = "encore",
     val security: Security = Security(),
-    val openApi: OpenApi = OpenApi()
+    val openApi: OpenApi = OpenApi(),
+    val worker: Worker = Worker()
 ) {
     data class Security(
         val enabled: Boolean = false,
@@ -32,5 +33,9 @@ data class EncoreProperties(
         val contactName: String = "",
         val contactUrl: String = "",
         val contactEmail: String = ""
+    )
+
+    data class Worker(
+        val queueNo: Int = 0
     )
 }

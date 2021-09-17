@@ -20,15 +20,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.config.EncoreProperties
 import se.svt.oss.encore.defaultEncoreJob
-import se.svt.oss.encore.model.Status
 import se.svt.oss.encore.model.queue.QueueItem
-import se.svt.oss.encore.repository.EncoreJobRepository
-import se.svt.oss.encore.service.EncoreService
+import se.svt.oss.encore.service.job.JobProcessor
 import se.svt.oss.encore.service.queue.QueueService
 import java.time.Instant
 import java.util.concurrent.ScheduledFuture
@@ -39,15 +36,12 @@ import java.util.concurrent.ScheduledFuture
 class JobPollerTest {
 
     @MockK
-    private lateinit var repository: EncoreJobRepository
-
-    @MockK
     private lateinit var queueService: QueueService
 
-    private val encoreProperties = EncoreProperties(concurrency = 3)
-
     @MockK
-    private lateinit var encoreService: EncoreService
+    private lateinit var jobProcessor: JobProcessor
+
+    private val encoreProperties = EncoreProperties(concurrency = 3)
 
     @MockK
     private lateinit var scheduler: ThreadPoolTaskScheduler
@@ -69,8 +63,7 @@ class JobPollerTest {
             scheduledTasks.add(scheduled)
             scheduled
         }
-        every { repository.findByIdOrNull(encoreJob.id) } returns encoreJob
-        every { encoreService.encode(encoreJob) } just Runs
+        every { jobProcessor.processJob(any()) } just Runs
         every { queueService.poll(any()) } returns queueItem
         jobPoller.init()
         assertThat(capturedRunnables).hasSize(3)
@@ -95,8 +88,7 @@ class JobPollerTest {
 
         verifySequence {
             queueService.poll(thread)
-            repository.findByIdOrNull(encoreJob.id)
-            encoreService.encode(encoreJob)
+            jobProcessor.processJob(queueItem)
         }
     }
 
@@ -111,7 +103,7 @@ class JobPollerTest {
             queueService.poll(thread)
         }
     }
-
+/*
     @ParameterizedTest
     @ValueSource(ints = [0, 1, 2])
     fun repositoryReturnsNull(thread: Int) {
@@ -188,4 +180,5 @@ class JobPollerTest {
             repository.save(encoreJob)
         }
     }
+    */
 }

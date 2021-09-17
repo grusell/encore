@@ -6,9 +6,11 @@ package se.svt.oss.encore
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import se.svt.oss.encore.config.EncoreProperties
 
+@Profile("!singlejobworker")
 @Configuration
 class SchedulingConfiguration {
 
