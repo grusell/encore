@@ -54,12 +54,8 @@ class FfmpegExecutor(private val mediaAnalyzer: MediaAnalyzer) {
             }
             progressChannel.close()
             outputs.flatMap { out ->
-                if (out.fileFilter != null) {
-                    File(outputFolder).listFiles(out.fileFilter)
-                        .map { mediaAnalyzer.analyze(it.path) }
-                } else {
-                    listOf(mediaAnalyzer.analyze(File(outputFolder).resolve(out.output).toString()))
-                }
+                out.postProcessor.process(File(outputFolder))
+                    .map { mediaAnalyzer.analyze(it.toString()) }
             }
         } catch (e: CancellationException) {
             log.info { "Job was cancelled" }

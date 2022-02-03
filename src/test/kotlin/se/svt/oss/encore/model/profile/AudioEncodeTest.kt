@@ -49,7 +49,6 @@ class AudioEncodeTest {
         assertThat(output)
             .hasOutput("test_aac_2ch.mp4")
             .hasSeekable(true)
-            .hasFileFilter(null)
             .hasVideo(null)
             .hasId("_aac_2ch.mp4")
             .hasAudio(
