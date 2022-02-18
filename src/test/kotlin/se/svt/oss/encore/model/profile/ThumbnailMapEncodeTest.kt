@@ -30,7 +30,7 @@ class ThumbnailMapEncodeTest {
         assertThat(output)
             .hasOutput("test_12x20_160x90_thumbnail_map.jpg")
             .hasSeekable(false)
-            .hasAudio(null)
+            .hasNoAudioStreams()
             .hasId("_12x20_160x90_thumbnail_map.jpg")
             .hasVideo(
                 VideoStreamEncode(
@@ -49,7 +49,7 @@ class ThumbnailMapEncodeTest {
         assertThat(output)
             .hasOutput("test_6x10_160x90_thumbnail_map.jpg")
             .hasSeekable(false)
-            .hasAudio(null)
+            .hasNoAudioStreams()
             .hasId("_6x10_160x90_thumbnail_map.jpg")
             .hasVideo(
                 VideoStreamEncode(

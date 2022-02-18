@@ -59,7 +59,6 @@ data class ThumbnailEncode(
 
         return Output(
             id = "${suffix}02d.jpg",
-            audio = null,
             video = VideoStreamEncode(
                 params = params.toParams(),
                 filter = filter,

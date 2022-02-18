@@ -64,7 +64,6 @@ data class ThumbnailMapEncode(
                 filter = "select=$select,pad=$pad,scale=-1:$tileHeight",
                 inputLabels = listOf(inputLabel)
             ),
-            audio = null,
             output = tempFolder.resolve("${job.baseName}$suffix%03d.$format").toString(),
             seekable = false,
             postProcessor = { outputFolder ->

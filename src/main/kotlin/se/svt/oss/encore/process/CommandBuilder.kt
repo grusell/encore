@@ -67,13 +67,15 @@ class CommandBuilder(
         val audioSplits = encoreJob.inputs.mapIndexedNotNull { index, input ->
             if (input !is AudioIn) return@mapIndexedNotNull null
             val analyzed = input.analyzedAudio
-            val splits = outputs.filter { it.audio?.inputLabels?.contains(input.audioLabel) == true }
-                .map { output ->
-                    output.audio?.filter?.let {
-                        MapName.AUDIO.preFilterLabel(input.audioLabel, output.id)
-                    }
-                        ?: MapName.AUDIO.mapLabel(output.id)
+            val splits = outputs.flatMap { output ->
+                output.audioStreams.mapIndexedNotNull { index, audioStreamEncode ->
+                    if (audioStreamEncode.inputLabels.contains(input.audioLabel)) {
+                        audioStreamEncode.filter?.let {
+                            MapName.AUDIO.preFilterLabel(input.audioLabel, "${output.id}-$index")
+                        } ?: MapName.AUDIO.mapLabel("${output.id}-$index")
+                    } else null
                 }
+            }
             if (splits.isEmpty()) {
                 log.debug { "No audio outputs for audio input ${input.audioLabel}" }
                 return@mapIndexedNotNull null
@@ -85,15 +87,17 @@ class CommandBuilder(
             val filters = (globalAudioFilters + split).joinToString(",")
             "$selector$filters"
         }
-        val streamFilters = outputs.filter { it.audio?.filter != null }
-            .mapNotNull { output ->
-                output.audio?.let { audioStreamEncode ->
+        val streamFilters = outputs.flatMap { output ->
+            output.audioStreams.mapIndexedNotNull { index, audioStreamEncode ->
+                val filter = audioStreamEncode.filter
+                if (filter != null) {
                     val prelabels = audioStreamEncode.inputLabels.map {
-                        MapName.AUDIO.preFilterLabel(it, output.id)
-                    }.filterNot { audioStreamEncode.filter?.contains(it) == true }
-                    "${prelabels.joinToString("")}${audioStreamEncode.filter ?: ""}${MapName.AUDIO.mapLabel(output.id)}"
-                }
+                        MapName.AUDIO.preFilterLabel(it, "${output.id}-$index")
+                    }.filterNot { filter.contains(it) }
+                    "${prelabels.joinToString("")}${filter}${MapName.AUDIO.mapLabel("${output.id}-$index")}"
+                } else null
             }
+        }
         return audioSplits + streamFilters
     }
 
@@ -200,9 +204,10 @@ class CommandBuilder(
         val mapV: List<String> =
             output.video?.let { listOf("-map", MapName.VIDEO.mapLabel(output.id)) + seekParams(output) }
                 ?: emptyList()
-        val mapA: List<String> =
-            output.audio?.let { listOf("-map", MapName.AUDIO.mapLabel(output.id)) + seekParams(output) }
-                ?: emptyList()
+
+        val mapA: List<String> = output.audioStreams.flatMapIndexed { index, _ ->
+            listOf("-map", MapName.AUDIO.mapLabel("${output.id}-$index")) + seekParams(output)
+        }
 
         val maps = mapV + mapA
         if (maps.isEmpty()) {
@@ -210,7 +215,12 @@ class CommandBuilder(
         }
 
         val videoParams = output.video?.params ?: listOf("-vn")
-        val audioParams = output.audio?.params ?: listOf("-an")
+        val audioParams = output.audioStreams.flatMapIndexed { index, audioStreamEncode ->
+            audioStreamEncode.params.map {
+                it.replace("{stream_index}", "$index")
+            }
+        }.ifEmpty { listOf("-an") }
+
         val metaDataParams = listOf("-metadata", "comment=Transcoded using Encore")
 
         return maps +

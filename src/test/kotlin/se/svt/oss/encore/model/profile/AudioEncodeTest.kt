@@ -51,9 +51,9 @@ class AudioEncodeTest {
             .hasSeekable(true)
             .hasVideo(null)
             .hasId("_aac_2ch.mp4")
-            .hasAudio(
+            .hasOnlyAudioStreams(
                 AudioStreamEncode(
-                    params = listOf("-ac", "2", "-c:a", "aac", "-ar", "48000"),
+                    params = listOf("-ac:a:{stream_index}", "2", "-c:a:{stream_index}", "aac", "-ar:a:{stream_index}", "48000"),
                     inputLabels = listOf(DEFAULT_AUDIO_LABEL)
                 )
             )
@@ -77,9 +77,9 @@ class AudioEncodeTest {
         assertThat(output)
             .hasOutput("test_aac_2ch.mp4")
             .hasVideo(null)
-            .hasAudio(
+            .hasOnlyAudioStreams(
                 AudioStreamEncode(
-                    listOf("-c:a", "aac", "-ar", "48000", "-b:a", "72000", "-profile:a", "LC", "-cutoff", "14000"),
+                    listOf("-c:a:{stream_index}", "aac", "-ar:a:{stream_index}", "48000", "-b:a:{stream_index}", "72000", "-profile:a", "LC", "-cutoff", "14000"),
                     "pan=stereo|c0=c0|c1=c1,1,3",
                     listOf(
                         DEFAULT_AUDIO_LABEL
