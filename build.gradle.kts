@@ -13,6 +13,7 @@ plugins {
     id("pl.allegro.tech.build.axion-release") version "1.13.3"
 
     //openapi generation
+    // dummy commit
     id("com.github.johnrengelman.processes") version "0.5.0"
     id("org.springdoc.openapi-gradle-plugin") version "1.3.3"
 }
