@@ -4,7 +4,6 @@
 
 package se.svt.oss.encore.model.profile
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.Assertions.assertThatThrownBy
@@ -24,18 +23,16 @@ class ThumbnailMapEncodeTest {
     )
 
     @Test
-    @Disabled("Until fixed")
     fun `correct output`() {
         val output = encode.getOutput(defaultEncoreJob(), emptyMap())
         assertThat(output)
-            .hasOutput("test_12x20_160x90_thumbnail_map.jpg")
             .hasSeekable(false)
             .hasNoAudioStreams()
             .hasId("_12x20_160x90_thumbnail_map.jpg")
             .hasVideo(
                 VideoStreamEncode(
-                    params = listOf("-frames", "1", "-q:v", "5"),
-                    filter = "select=not(mod(n\\,1)),pad=aspect=16/9:x=(ow-iw)/2:y=(oh-ih)/2,scale=-1:90,tile=12x20",
+                    params = listOf("-q:v", "5"),
+                    filter = "select=not(mod(n\\,1)),pad=aspect=16/9:x=(ow-iw)/2:y=(oh-ih)/2,scale=-1:90",
                     twoPass = false,
                     inputLabels = listOf(DEFAULT_VIDEO_LABEL)
                 )
@@ -43,18 +40,16 @@ class ThumbnailMapEncodeTest {
     }
 
     @Test
-    @Disabled("Until fixed")
     fun `correct output seekTo and duration`() {
         val output = ThumbnailMapEncode(cols = 6, rows = 10).getOutput(defaultEncoreJob().copy(seekTo = 1.0, duration = 5.0), emptyMap())
         assertThat(output)
-            .hasOutput("test_6x10_160x90_thumbnail_map.jpg")
             .hasSeekable(false)
             .hasNoAudioStreams()
             .hasId("_6x10_160x90_thumbnail_map.jpg")
             .hasVideo(
                 VideoStreamEncode(
-                    params = listOf("-frames", "1", "-q:v", "5"),
-                    filter = "select=not(mod(n\\,2))*gte(t\\,1.0),pad=aspect=16/9:x=(ow-iw)/2:y=(oh-ih)/2,scale=-1:90,tile=6x10",
+                    params = listOf("-q:v", "5"),
+                    filter = "select=not(mod(n\\,2))*gte(t\\,1.0),pad=aspect=16/9:x=(ow-iw)/2:y=(oh-ih)/2,scale=-1:90",
                     twoPass = false,
                     inputLabels = listOf(DEFAULT_VIDEO_LABEL)
                 )

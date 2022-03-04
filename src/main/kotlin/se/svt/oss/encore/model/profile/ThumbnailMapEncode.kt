@@ -67,25 +67,28 @@ data class ThumbnailMapEncode(
             output = tempFolder.resolve("${job.baseName}$suffix%03d.$format").toString(),
             seekable = false,
             postProcessor = { outputFolder ->
-                val targetFile = outputFolder.resolve("${job.baseName}$suffix.$format")
-                val process = ProcessBuilder(
-                    "ffmpeg",
-                    "-i",
-                    "${job.baseName}$suffix%03d.$format",
-                    "-vf",
-                    "tile=${cols}x$rows",
-                    "-frames:v",
-                    "1",
-                    "$targetFile"
-                )
-                    .directory(tempFolder)
-                    .start()
-                val status = process.waitFor()
-                tempFolder.deleteRecursively()
-                if (status == 0) {
+                try {
+                    val targetFile = outputFolder.resolve("${job.baseName}$suffix.$format")
+                    val process = ProcessBuilder(
+                        "ffmpeg",
+                        "-i",
+                        "${job.baseName}$suffix%03d.$format",
+                        "-vf",
+                        "tile=${cols}x$rows",
+                        "-frames:v",
+                        "1",
+                        "$targetFile"
+                    )
+                        .directory(tempFolder)
+                        .start()
+                    val status = process.waitFor()
+                    tempFolder.deleteRecursively()
+                    if (status != 0) {
+                        throw RuntimeException("Ffmpeg returned status code $status")
+                    }
                     listOf(targetFile)
-                } else {
-                    logOrThrow("Error creating thumbnail map!")
+                } catch (e: Exception) {
+                    logOrThrow("Error creating thumbnail map! ${e.message}")
                     emptyList()
                 }
             }
