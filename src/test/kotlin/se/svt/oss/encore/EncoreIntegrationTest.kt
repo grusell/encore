@@ -159,10 +159,12 @@ class EncoreIntegrationTest : EncoreIntegrationTestBase() {
 
     @Test
     fun jobIsCancelled(@TempDir outputDir: File) {
-        var createdJob = encoreClient.createJob(job(outputDir))
-        await().pollInterval(200, TimeUnit.MILLISECONDS)
-            .atMost(Durations.ONE_MINUTE)
-            .until { mockServer.requestCount > 0 }
+        var createdJob = createAndAwaitJob(
+            job(outputDir),
+            pollInterval = Duration.ofMillis(200)
+        ) {
+            it.status == Status.IN_PROGRESS
+        }
 
         encoreClient.cancel(createdJob.id)
 
@@ -174,22 +176,6 @@ class EncoreIntegrationTest : EncoreIntegrationTestBase() {
 
         assertThat(createdJob)
             .hasStatus(Status.CANCELLED)
-
-        val requestCount = mockServer.requestCount
-        assertThat(requestCount).isGreaterThan(0)
-
-        val jobList = mutableListOf<JobProgress>()
-        repeat(requestCount) {
-            val request = mockServer.takeRequest()
-            val json = request.body.readUtf8()
-            val progress = objectMapper.readValue<JobProgress>(json)
-            jobList.add(progress)
-            assertThat(progress).hasJobId(createdJob.id).hasExternalId(createdJob.externalId)
-            assertThat(progress.progress).isGreaterThan(0)
-        }
-        assertThat(jobList.subList(0, jobList.size - 1)).allMatch { it.status == Status.IN_PROGRESS }
-        assertThat(jobList.last().progress).isLessThan(100)
-        assertThat(jobList.last()).hasStatus(Status.CANCELLED)
     }
 
     @Test
