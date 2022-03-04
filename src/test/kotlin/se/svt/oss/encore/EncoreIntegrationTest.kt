@@ -4,7 +4,6 @@
 
 package se.svt.oss.encore
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.awaitility.Awaitility.await
 import org.awaitility.Durations
 import org.junit.jupiter.api.Test
@@ -13,7 +12,6 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.model.Status
-import se.svt.oss.encore.model.callback.JobProgress
 import se.svt.oss.encore.model.input.AudioInput
 import se.svt.oss.encore.model.input.VideoInput
 import se.svt.oss.encore.model.queue.QueueItem
