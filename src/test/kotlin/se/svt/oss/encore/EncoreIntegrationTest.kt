@@ -25,13 +25,6 @@ import java.util.concurrent.TimeUnit
 @ActiveProfiles("test")
 class EncoreIntegrationTest : EncoreIntegrationTestBase() {
 
-    /*@Test
-    fun bcTest() {
-        EncoreJob(
-            profile = "bc",
-            outputFolder =
-        )
-    }*/
     @Test
     fun jobIsSuccessfulSurround(@TempDir outputDir: File) {
         successfulTest(

@@ -18,7 +18,7 @@ jacocoTestCoverageVerification {
             }
         }
 
-        failOnViolation = false
+        failOnViolation = true
     }
 }
 jacoco {
