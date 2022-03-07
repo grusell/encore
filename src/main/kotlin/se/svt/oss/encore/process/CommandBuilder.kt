@@ -155,7 +155,7 @@ class CommandBuilder(
         val videoStream = videoFile.highestBitrateVideoStream
         if (videoStream.isInterlaced) {
             log.debug { "Video input ${input.videoLabel} is interlaced. Applying deinterlace filter." }
-            filters.add("yadif")
+            filters.add(profile.deinterlaceFilter)
         }
         val isAnamorphic = videoStream.sampleAspectRatio?.toFractionOrNull()
             ?.let { it != Fraction(1, 1) } == true

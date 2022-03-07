@@ -35,6 +35,7 @@ internal class CommandBuilderTest {
         commandBuilder = CommandBuilder(encoreJob, profile, encoreJob.outputFolder)
 
         every { profile.scaling } returns "scaling"
+        every { profile.deinterlaceFilter } returns "yadif"
     }
 
     @Test
