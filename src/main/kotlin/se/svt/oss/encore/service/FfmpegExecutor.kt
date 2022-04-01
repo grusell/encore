@@ -10,12 +10,15 @@ import kotlinx.coroutines.channels.trySendBlocking
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import se.svt.oss.encore.model.EncoreJob
+import se.svt.oss.encore.model.Progress
 import se.svt.oss.encore.model.input.maxDuration
 import se.svt.oss.encore.model.output.Output
 import se.svt.oss.encore.model.profile.Profile
 import se.svt.oss.encore.process.CommandBuilder
 import se.svt.oss.mediaanalyzer.MediaAnalyzer
 import se.svt.oss.mediaanalyzer.file.MediaFile
+import se.svt.oss.processmonitor.ProcessMonitor
+import se.svt.oss.processmonitor.model.ProcessStats
 import java.io.File
 import java.nio.file.Files
 import java.util.concurrent.TimeUnit
@@ -23,7 +26,11 @@ import kotlin.math.min
 import kotlin.math.round
 
 @Service
-class FfmpegExecutor(private val mediaAnalyzer: MediaAnalyzer) {
+class FfmpegExecutor(
+    private val mediaAnalyzer: MediaAnalyzer
+) {
+
+    private val processMonitor = ProcessMonitor()
 
     private val log = KotlinLogging.logger { }
 
@@ -38,7 +45,7 @@ class FfmpegExecutor(private val mediaAnalyzer: MediaAnalyzer) {
         profile: Profile,
         outputs: List<Output>,
         outputFolder: String,
-        progressChannel: SendChannel<Int>
+        progressChannel: SendChannel<Progress>
     ): List<MediaFile> {
         val commands = CommandBuilder(encoreJob, profile, outputFolder).buildCommands(outputs)
         log.info { "Start encoding ${encoreJob.baseName}..." }
@@ -46,10 +53,15 @@ class FfmpegExecutor(private val mediaAnalyzer: MediaAnalyzer) {
         val duration = encoreJob.duration ?: encoreJob.inputs.maxDuration()
         return try {
             File(outputFolder).mkdirs()
-            progressChannel.trySendBlocking(0).getOrThrow()
+            progressChannel.trySendBlocking(Progress(0, 0, 0)).getOrThrow()
+            val totalCpuTimePerProcess = Array(commands.size) { 0L }
             commands.forEachIndexed { index, command ->
-                runFfmpeg(command, workDir, duration) { progress ->
-                    progressChannel.trySendBlocking(totalProgress(progress, index, commands.size)).getOrThrow()
+                runFfmpeg(command, workDir, duration) { progress, stats ->
+                    totalCpuTimePerProcess[index] = stats?.cpuTimeTotal ?: totalCpuTimePerProcess[index]
+                    val totalCpuTime = totalCpuTimePerProcess.sum()
+                    val progressPercent = totalProgress(progress, index, commands.size)
+                    progressChannel.trySendBlocking(Progress(progressPercent, totalCpuTime, stats?.cpuCurrent))
+                        .getOrThrow()
                 }
             }
             progressChannel.close()
@@ -72,7 +84,7 @@ class FfmpegExecutor(private val mediaAnalyzer: MediaAnalyzer) {
         command: List<String>,
         workDir: File,
         duration: Double?,
-        onProgress: (Int) -> Unit
+        onProgress: (Int, ProcessStats?) -> Unit
     ) {
         log.info { "Running duration: $duration" }
         log.info { command.joinToString(" ") }
@@ -81,13 +93,13 @@ class FfmpegExecutor(private val mediaAnalyzer: MediaAnalyzer) {
             .directory(workDir)
             .redirectErrorStream(true)
             .start()
-
+        processMonitor.monitorProcess(ffmpegProcess.pid())
         val errorLines = mutableListOf<String>()
         ffmpegProcess.inputStream.reader().useLines { lines ->
             lines.forEach { line ->
                 val progress = getProgress(duration, line)
                 if (progress != null) {
-                    onProgress(progress)
+                    onProgress(progress, processMonitor.processStats(ffmpegProcess.pid()))
                 } else {
                     when (getLoglevel(line)) {
                         "warning" -> {
@@ -123,18 +135,19 @@ class FfmpegExecutor(private val mediaAnalyzer: MediaAnalyzer) {
     private fun finishProcess(
         ffmpegProcess: Process,
         errorLines: MutableList<String>,
-        onProgress: (Int) -> Unit
+        onProgress: (Int, ProcessStats?) -> Unit
     ) {
         ffmpegProcess.waitFor(1L, TimeUnit.MINUTES)
         ffmpegProcess.destroy()
-
         val exitCode = ffmpegProcess.waitFor()
         if (exitCode != 0) {
             throw RuntimeException(
                 "Error running ffmpeg (exit code $exitCode) :\n${errorLines.reversed().joinToString("\n")}"
             )
         }
-        onProgress(100)
+        val finalStats = processMonitor.unmonitorProcess(ffmpegProcess.pid())
+        log.info { "Final process stats: $finalStats" }
+        onProgress(100, finalStats?.copy(cpuCurrent = 0))
     }
 
     private fun totalProgress(subtaskProgress: Int, subtaskIndex: Int, subtaskCount: Int) =

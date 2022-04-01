@@ -10,7 +10,9 @@ jacocoTestCoverageVerification {
                     '*.EncoreApplicationKt.*',
                     '*.static {...}',
                     '*.model.*.*.get*',
-                    '*.service.localencode.LocalEncodeService.moveFile*'
+                    '*.service.localencode.LocalEncodeService.moveFile*',
+                    '*.ProcessMonitorKt.getSystemClockTick()',
+                    '*.ProcessMonitor.startMonitoringThread()'
             ]
             limit {
                 counter = 'LINE'

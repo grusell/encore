@@ -29,6 +29,7 @@ import se.svt.oss.encore.cancellation.CancellationListener
 import se.svt.oss.encore.config.EncoreProperties
 import se.svt.oss.encore.model.CancelEvent
 import se.svt.oss.encore.model.EncoreJob
+import se.svt.oss.encore.model.Progress
 import se.svt.oss.encore.model.Status
 import se.svt.oss.encore.repository.EncoreJobRepository
 import se.svt.oss.encore.service.callback.CallbackService
@@ -37,6 +38,7 @@ import se.svt.oss.encore.service.mediaanalyzer.MediaAnalyzerService
 import se.svt.oss.encore.service.profile.ProfileService
 import se.svt.oss.mediaanalyzer.file.MediaContainer
 import se.svt.oss.mediaanalyzer.file.MediaFile
+import java.time.Duration
 import java.util.Locale
 
 @Service
@@ -94,7 +96,7 @@ class EncoreService(
             val start = System.currentTimeMillis()
 
             var outputFiles = runBlocking(coroutineJob + MDCContext()) {
-                val progressChannel = Channel<Int>()
+                val progressChannel = Channel<Progress>()
                 handleProgress(progressChannel, encoreJob)
                 ffmpegExecutor.run(encoreJob, profile, outputs, outputFolder, progressChannel)
             }
@@ -131,20 +133,26 @@ class EncoreService(
     }
 
     private fun CoroutineScope.handleProgress(
-        progressChannel: ReceiveChannel<Int>,
+        progressChannel: ReceiveChannel<Progress>,
         encoreJob: EncoreJob
     ) {
         launch {
             progressChannel.consumeAsFlow()
                 .conflate()
-                .distinctUntilChanged()
+                .distinctUntilChanged { old, new ->
+                    old.progress == new.progress && new.timestamp - old.timestamp < Duration.ofMinutes(1).toMillis()
+                }
                 .sample(10_000)
                 .collect {
                     log.info { "Received progress $it" }
                     try {
-                        encoreJob.progress = it
+                        encoreJob.progress = it.progress
+                        encoreJob.cpuTimeMillis = it.totalCpuTimeMillis ?: encoreJob.cpuTimeMillis
+                        encoreJob.currentCpuUsage = it.currentCpuUsage ?: encoreJob.currentCpuUsage
                         val partialUpdate = PartialUpdate(encoreJob.id, EncoreJob::class.java)
                             .set(encoreJob::progress.name, encoreJob.progress)
+                            .set(encoreJob::cpuTimeMillis.name, encoreJob.cpuTimeMillis)
+                            .set(encoreJob::currentCpuUsage.name, encoreJob.currentCpuUsage)
                         redisKeyValueTemplate.update(partialUpdate)
                         callbackService.sendProgressCallback(encoreJob)
                     } catch (e: Exception) {
@@ -158,6 +166,7 @@ class EncoreService(
         encoreJob.output = output
         encoreJob.status = Status.SUCCESSFUL
         encoreJob.progress = 100
+        encoreJob.currentCpuUsage = 0
         encoreJob.speed = speed
     }
 }

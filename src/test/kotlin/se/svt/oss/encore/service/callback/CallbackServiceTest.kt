@@ -21,7 +21,7 @@ import java.net.URI
 class CallbackServiceTest {
 
     @MockK
-    private lateinit var callackClient: CallbackClient
+    private lateinit var callbackClient: CallbackClient
 
     @InjectMockKs
     private lateinit var callbackService: CallbackService
@@ -31,6 +31,7 @@ class CallbackServiceTest {
         profile = "program",
         progressCallbackUri = URI.create("wwww.callback.com"),
         progress = 50,
+        currentCpuUsage = 500,
         baseName = "file"
     )
 
@@ -38,22 +39,23 @@ class CallbackServiceTest {
         encoreJob.id,
         encoreJob.externalId,
         encoreJob.progress,
-        encoreJob.status
+        encoreJob.status,
+        encoreJob.currentCpuUsage
     )
 
     @Test
     fun `successful callback`() {
-        every { callackClient.sendProgressCallback(encoreJob.progressCallbackUri!!, progress) } just Runs
+        every { callbackClient.sendProgressCallback(encoreJob.progressCallbackUri!!, progress) } just Runs
 
         callbackService.sendProgressCallback(encoreJob)
 
-        verify { callackClient.sendProgressCallback(encoreJob.progressCallbackUri!!, progress) }
+        verify { callbackClient.sendProgressCallback(encoreJob.progressCallbackUri!!, progress) }
     }
 
     @Test
     fun `some error upon callback`() {
         every {
-            callackClient.sendProgressCallback(
+            callbackClient.sendProgressCallback(
                 encoreJob.progressCallbackUri!!,
                 progress
             )
@@ -61,6 +63,6 @@ class CallbackServiceTest {
 
         callbackService.sendProgressCallback(encoreJob)
 
-        verify { callackClient.sendProgressCallback(encoreJob.progressCallbackUri!!, progress) }
+        verify { callbackClient.sendProgressCallback(encoreJob.progressCallbackUri!!, progress) }
     }
 }

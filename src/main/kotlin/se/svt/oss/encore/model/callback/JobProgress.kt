@@ -11,5 +11,6 @@ data class JobProgress(
     val jobId: UUID,
     val externalId: String?,
     val progress: Int,
-    val status: Status
+    val status: Status,
+    val currentCpuUsage: Int? = null
 )

@@ -101,6 +101,18 @@ data class EncoreJob(
     var speed: Double? = null,
 
     @Schema(
+        description = "The total CPU time used by this job, in milliseconds",
+        example = "342000", accessMode = Schema.AccessMode.READ_ONLY, nullable = false
+    )
+    var cpuTimeMillis: Long = 0,
+
+    @Schema(
+        description = "The current cpu usage in millicores",
+        example = "3420", accessMode = Schema.AccessMode.READ_ONLY, nullable = false
+    )
+    var currentCpuUsage: Int = 0,
+
+    @Schema(
         description = "The time for when the EncoreJob was picked from the queue)",
         example = "2021-04-19T07:20:43.819141+02:00", accessMode = Schema.AccessMode.READ_ONLY, nullable = true
     )

@@ -23,7 +23,8 @@ class CallbackService(private val callbackClient: CallbackClient) {
                         encoreJob.id,
                         encoreJob.externalId,
                         encoreJob.progress,
-                        encoreJob.status
+                        encoreJob.status,
+                        encoreJob.currentCpuUsage
                     )
                 )
             } catch (e: Exception) {

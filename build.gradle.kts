@@ -67,7 +67,7 @@ configurations {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2020.0.3")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2021.0.1")
     }
 }
 
@@ -104,6 +104,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-kotlin:1.5.10")
     implementation("org.springdoc:springdoc-openapi-data-rest:1.5.10")
     implementation("org.springdoc:springdoc-openapi-hateoas:1.5.10")
+
+    implementation(files("process-monitor-0.1.0-SNAPSHOT.jar"))
 
     testImplementation("se.svt.oss:junit5-redis-extension:3.0.0")
     testImplementation("se.svt.oss:random-port-initializer:1.0.5")
