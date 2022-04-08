@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     idea
     jacoco
-    id("org.springframework.boot") version "2.6.4"
+    id("org.springframework.boot") version "2.6.6"
     id("se.ascp.gradle.gradle-versions-filter") version "0.1.10"
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.spring") version "1.6.10"
+    kotlin("jvm") version "1.6.20"
+    kotlin("plugin.spring") version "1.6.20"
     id("com.github.fhermansson.assertj-generator") version "1.1.4"
     id("org.jmailen.kotlinter") version "3.9.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
@@ -71,7 +71,7 @@ dependencyManagement {
     }
 }
 
-val redissonVersion = "3.16.8"
+val redissonVersion = "3.17.0"
 
 dependencies {
     implementation("se.svt.oss:media-analyzer:1.0.3")
