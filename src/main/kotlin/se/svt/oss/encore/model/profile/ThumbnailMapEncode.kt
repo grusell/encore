@@ -14,7 +14,7 @@ import se.svt.oss.encore.model.output.Output
 import se.svt.oss.encore.model.output.VideoStreamEncode
 import se.svt.oss.mediaanalyzer.file.stringValue
 import se.svt.oss.mediaanalyzer.file.toFractionOrNull
-import kotlin.io.path.createTempDirectory
+import java.nio.file.Paths
 import kotlin.math.round
 
 data class ThumbnailMapEncode(
@@ -50,8 +50,10 @@ data class ThumbnailMapEncode(
                 "Video input $inputLabel did not contain enough frames to generate thumbnail map $suffix: $numFrames < $cols cols * $rows rows"
             return logOrThrow(message)
         }
-        val tempFolder = createTempDirectory(suffix).toFile()
-        tempFolder.deleteOnExit()
+        // val tempFolder = createTempDirectory(suffix).toFile()
+        val tempFolder = Paths.get(job.outputFolder).resolve("thumbnailmap_tmp").toFile()
+        tempFolder.mkdirs()
+        // tempFolder.deleteOnExit()
         val pad =
             "aspect=${Fraction(tileWidth, tileHeight).stringValue()}:x=(ow-iw)/2:y=(oh-ih)/2" // pad to aspect ratio
         val nthFrame = numFrames / (cols * rows)

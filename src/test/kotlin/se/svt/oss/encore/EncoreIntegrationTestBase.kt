@@ -153,12 +153,14 @@ class EncoreIntegrationTestBase() {
     fun job(
         outputDir: File,
         priority: Int = 0,
-        file: Resource = testFileSurround
+        file: Resource = testFileSurround,
+        profile: String = "program",
+        enableChunkedEncode: Boolean = false
     ) =
         EncoreJob(
             externalId = "externalId",
             baseName = file.file.nameWithoutExtension,
-            profile = "program",
+            profile = profile,
             outputFolder = outputDir.absolutePath,
             progressCallbackUri = URI.create("http://localhost:${mockServer.port}/callbacks/111"),
             debugOverlay = true,
@@ -169,6 +171,7 @@ class EncoreIntegrationTestBase() {
                     useFirstAudioStreams = 6
                 )
             ),
+            enableChunkedEncode = enableChunkedEncode,
             logContext = mapOf("FlowId" to UUID.randomUUID().toString())
         )
 

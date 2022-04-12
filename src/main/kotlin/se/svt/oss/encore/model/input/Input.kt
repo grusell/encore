@@ -204,9 +204,10 @@ data class AudioVideoInput(
         get() = analyzedVideo.duration
 }
 
-fun List<Input>.inputParams(readDuration: Double?): List<String> =
+fun List<Input>.inputParams(readDuration: Double?, seek: Double? = null): List<String> =
     flatMap { input ->
         input.params.toParams() +
+            (seek?.let { listOf("-ss", "$it") } ?: emptyList()) +
             (readDuration?.let { listOf("-t", "$it") } ?: emptyList()) +
             listOf("-i", input.uri)
     }

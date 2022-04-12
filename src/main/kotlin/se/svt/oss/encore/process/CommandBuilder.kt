@@ -25,6 +25,19 @@ import java.io.File
 
 private val defaultAspectRatio = Fraction(16, 9)
 
+data class ChunkParameters(
+    val n: Int,
+    val seek: Double,
+    val duration: Double
+)
+
+fun ChunkParameters?.chunkName(output: Output): String {
+    if (this == null) return output.output
+    val suffix = output.output.substringAfterLast(".")
+    val basename = output.output.substringBeforeLast(".")
+    return "${basename}_chunk${this.n}.$suffix"
+}
+
 class CommandBuilder(
     private val encoreJob: EncoreJob,
     private val profile: Profile,
@@ -32,20 +45,21 @@ class CommandBuilder(
 ) {
     private val log = KotlinLogging.logger { }
 
-    fun buildCommands(outputs: List<Output>): List<List<String>> {
+    fun buildCommands(outputs: List<Output>, chunkParameters: ChunkParameters? = null): List<List<String>> {
         val (twoPassOuts, singlePassOuts) = outputs.partition { it.video?.twoPass == true }
         return if (twoPassOuts.isNotEmpty()) {
             listOf(
-                firstPassCommand(twoPassOuts),
-                secondPassCommand(twoPassOuts + singlePassOuts)
+                firstPassCommand(twoPassOuts, chunkParameters),
+                secondPassCommand(twoPassOuts + singlePassOuts, chunkParameters)
             )
         } else {
-            listOf(secondPassCommand(singlePassOuts))
+            listOf(secondPassCommand(singlePassOuts, chunkParameters))
         }
     }
 
     private fun firstPassCommand(
-        outputs: List<Output>
+        outputs: List<Output>,
+        chunkParameters: ChunkParameters?
     ): List<String> {
         val inputs = encoreJob.inputs.filterIsInstance<VideoIn>()
             .filter { input ->
@@ -53,14 +67,17 @@ class CommandBuilder(
             }
         val videoFilters = videoFilters(inputs, outputs)
         val outputParams = outputs.flatMap(this::firstPassParams)
-        return inputParams(inputs) + filterParam(videoFilters) + outputParams
+        return inputParams(inputs, chunkParameters) + filterParam(videoFilters) + outputParams
     }
 
-    private fun secondPassCommand(outputs: List<Output>): List<String> {
+    private fun secondPassCommand(
+        outputs: List<Output>,
+        chunkParameters: ChunkParameters?
+    ): List<String> {
         val videoFilters = videoFilters(encoreJob.inputs, outputs)
         val audioFilters = audioFilters(outputs)
-        val outputParams = outputs.flatMap(this::secondPassParams)
-        return inputParams(encoreJob.inputs) + filterParam(videoFilters + audioFilters) + outputParams
+        val outputParams = outputs.flatMap { secondPassParams(it, chunkParameters) }
+        return inputParams(encoreJob.inputs, chunkParameters) + filterParam(videoFilters + audioFilters) + outputParams
     }
 
     private fun audioFilters(outputs: List<Output>): List<String> {
@@ -137,8 +154,11 @@ class CommandBuilder(
         return listOf("-filter_complex", (listOf("sws_flags=${profile.scaling}") + filters).joinToString(";"))
     }
 
-    private fun inputParams(inputs: List<Input>): List<String> {
-        val readDuration = encoreJob.duration?.let {
+    private fun inputParams(
+        inputs: List<Input>,
+        chunkParameters: ChunkParameters?
+    ): List<String> {
+        val readDuration = chunkParameters?.duration ?: encoreJob.duration?.let {
             it + (encoreJob.seekTo ?: 0.0)
         }
         return listOf(
@@ -147,7 +167,7 @@ class CommandBuilder(
             "-loglevel",
             "+level",
             "-y"
-        ) + inputs.inputParams(readDuration)
+        ) + inputs.inputParams(readDuration, chunkParameters?.seek)
     }
 
     private fun globalVideoFilters(input: VideoIn, videoFile: VideoFile): List<String> {
@@ -200,7 +220,7 @@ class CommandBuilder(
             listOf("-f", output.format, "/dev/null")
     }
 
-    private fun secondPassParams(output: Output): List<String> {
+    private fun secondPassParams(output: Output, chunkParameters: ChunkParameters?): List<String> {
         val mapV: List<String> =
             output.video?.let { listOf("-map", MapName.VIDEO.mapLabel(output.id)) + seekParams(output) }
                 ?: emptyList()
@@ -223,11 +243,12 @@ class CommandBuilder(
 
         val metaDataParams = listOf("-metadata", "comment=Transcoded using Encore")
 
+        val filename = chunkParameters.chunkName(output)
         return maps +
             durationParams(output) +
             videoParams + audioParams +
             metaDataParams +
-            File(outputFolder).resolve(output.output).toString()
+            File(outputFolder).resolve(filename).toString()
     }
 
     private fun seekParams(output: Output): List<String> = if (!output.seekable) emptyList() else

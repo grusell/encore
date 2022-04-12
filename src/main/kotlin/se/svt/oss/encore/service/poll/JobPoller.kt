@@ -16,6 +16,7 @@ import se.svt.oss.encore.model.EncoreJob
 import se.svt.oss.encore.model.Status
 import se.svt.oss.encore.model.queue.QueueItem
 import se.svt.oss.encore.repository.EncoreJobRepository
+import se.svt.oss.encore.service.ChunkedEncodingService
 import se.svt.oss.encore.service.EncoreService
 import se.svt.oss.encore.service.queue.QueueService
 import java.time.Instant
@@ -31,6 +32,7 @@ class JobPoller(
     private val repository: EncoreJobRepository,
     private val queueService: QueueService,
     private val encoreService: EncoreService,
+    private val chunkedEncodingService: ChunkedEncodingService,
     private val scheduler: ThreadPoolTaskScheduler,
     private val encoreProperties: EncoreProperties,
 ) {
@@ -74,7 +76,11 @@ class JobPoller(
             }
             log.info { "Running job" }
             try {
-                encoreService.encode(job)
+                if (job.enableChunkedEncode) {
+                    chunkedEncodingService.encode(job)
+                } else {
+                    encoreService.encode(job)
+                }
             } catch (e: InterruptedException) {
                 repostJob(job)
             }

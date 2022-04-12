@@ -36,7 +36,8 @@ interface VideoEncode : OutputProducer {
                 filter = videoFilter(job.debugOverlay),
             ),
             audioStreams = audio,
-            output = "${job.baseName}$suffix.$format"
+            output = "${job.baseName}$suffix.$format",
+            chunkable = true
         )
     }
 

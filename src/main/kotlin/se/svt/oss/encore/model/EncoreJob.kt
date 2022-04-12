@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.Reference
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed
 import org.springframework.validation.annotation.Validated
+import se.svt.oss.encore.model.childjob.ChildJob
 import se.svt.oss.encore.model.input.Input
 import se.svt.oss.mediaanalyzer.file.MediaFile
 import java.net.URI
@@ -137,7 +139,9 @@ data class EncoreJob(
     val thumbnailTime: Double? = null,
 
     @NotEmpty
-    val inputs: List<Input> = emptyList()
+    val inputs: List<Input> = emptyList(),
+
+    val enableChunkedEncode: Boolean = false
 ) {
 
     @Schema(
@@ -162,6 +166,13 @@ data class EncoreJob(
                 startedDate = OffsetDateTime.now()
             }
         }
+
+    @Reference
+    var childJobs = mutableListOf<ChildJob>()
+
+    var activeChildJobs: Int = 0
+
+    var chunkedEncodingState: String? = null
 
     val contextMap: Map<String, String>
         @JsonIgnore
