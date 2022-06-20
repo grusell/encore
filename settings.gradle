@@ -1,1 +1,3 @@
 rootProject.name = 'encore'
+include 'app'
+include 'api'
