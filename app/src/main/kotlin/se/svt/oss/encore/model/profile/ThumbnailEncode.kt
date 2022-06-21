@@ -7,9 +7,9 @@ package se.svt.oss.encore.model.profile
 import mu.KotlinLogging
 import se.svt.oss.encore.config.AudioMixPreset
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.input.DEFAULT_VIDEO_LABEL
-import se.svt.oss.encore.model.input.analyzedVideo
-import se.svt.oss.encore.model.mediafile.toParams
+import se.svt.oss.encore.api.input.DEFAULT_VIDEO_LABEL
+import se.svt.oss.encore.api.input.analyzedVideo
+import se.svt.oss.encore.api.mediafile.toParams
 import se.svt.oss.encore.model.output.Output
 import se.svt.oss.encore.model.output.VideoStreamEncode
 import se.svt.oss.mediaanalyzer.file.toFractionOrNull

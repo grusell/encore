@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: EUPL-1.2
 
-package se.svt.oss.encore.model.mediafile
+package se.svt.oss.encore.api.mediafile
 
 enum class AudioLayout {
     NONE,

@@ -5,7 +5,7 @@
 package se.svt.oss.encore.model.profile
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import se.svt.oss.encore.model.input.DEFAULT_VIDEO_LABEL
+import se.svt.oss.encore.api.input.DEFAULT_VIDEO_LABEL
 
 data class X264Encode(
     override val width: Int?,

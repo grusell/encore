@@ -12,8 +12,8 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.model.Status
-import se.svt.oss.encore.model.input.AudioInput
-import se.svt.oss.encore.model.input.VideoInput
+import se.svt.oss.encore.api.input.AudioInput
+import se.svt.oss.encore.api.input.VideoInput
 import se.svt.oss.encore.model.queue.QueueItem
 import se.svt.oss.mediaanalyzer.file.ImageFile
 import se.svt.oss.mediaanalyzer.file.MediaContainer

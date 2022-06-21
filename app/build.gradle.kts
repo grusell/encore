@@ -74,6 +74,7 @@ dependencyManagement {
 val redissonVersion = "3.17.0"
 
 dependencies {
+    implementation(project(":api"))
     implementation("se.svt.oss:media-analyzer:1.0.3")
     implementation(kotlin("reflect"))
 

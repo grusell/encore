@@ -11,7 +11,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed
 import org.springframework.validation.annotation.Validated
-import se.svt.oss.encore.model.input.Input
+import se.svt.oss.encore.api.input.Input
 import se.svt.oss.mediaanalyzer.file.MediaFile
 import java.net.URI
 import java.time.OffsetDateTime

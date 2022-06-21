@@ -9,8 +9,8 @@ import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.Assertions.assertThatThrownBy
 import se.svt.oss.encore.defaultEncoreJob
 import se.svt.oss.encore.defaultVideoFile
-import se.svt.oss.encore.model.input.AudioVideoInput
-import se.svt.oss.encore.model.input.DEFAULT_VIDEO_LABEL
+import se.svt.oss.encore.api.input.AudioVideoInput
+import se.svt.oss.encore.api.input.DEFAULT_VIDEO_LABEL
 import se.svt.oss.encore.model.output.VideoStreamEncode
 
 class ThumbnailMapEncodeTest {

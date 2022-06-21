@@ -6,7 +6,7 @@ package se.svt.oss.encore.model.profile
 
 import se.svt.oss.encore.config.AudioMixPreset
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.mediafile.toParams
+import se.svt.oss.encore.api.mediafile.toParams
 import se.svt.oss.encore.model.output.Output
 import se.svt.oss.encore.model.output.VideoStreamEncode
 

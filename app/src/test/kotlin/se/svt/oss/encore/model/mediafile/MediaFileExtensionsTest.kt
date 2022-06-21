@@ -7,6 +7,12 @@ package se.svt.oss.encore.model.mediafile
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import se.svt.oss.encore.Assertions.assertThat
+import se.svt.oss.encore.api.mediafile.AudioLayout
+import se.svt.oss.encore.api.mediafile.audioLayout
+import se.svt.oss.encore.api.mediafile.channelCount
+import se.svt.oss.encore.api.mediafile.selectAudioStream
+import se.svt.oss.encore.api.mediafile.selectVideoStream
+import se.svt.oss.encore.api.mediafile.trimAudio
 import se.svt.oss.encore.multipleAudioFile
 import se.svt.oss.encore.defaultVideoFile
 import se.svt.oss.encore.multipleVideoFile

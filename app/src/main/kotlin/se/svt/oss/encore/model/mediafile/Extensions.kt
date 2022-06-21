@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: EUPL-1.2
 
-package se.svt.oss.encore.model.mediafile
+package se.svt.oss.encore.api.mediafile
 
 import mu.KotlinLogging
 import se.svt.oss.mediaanalyzer.file.AudioFile

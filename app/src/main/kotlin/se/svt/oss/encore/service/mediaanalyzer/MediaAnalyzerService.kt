@@ -6,12 +6,12 @@ package se.svt.oss.encore.service.mediaanalyzer
 
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
-import se.svt.oss.encore.model.input.AudioIn
-import se.svt.oss.encore.model.input.Input
-import se.svt.oss.encore.model.input.VideoIn
-import se.svt.oss.encore.model.mediafile.selectAudioStream
-import se.svt.oss.encore.model.mediafile.selectVideoStream
-import se.svt.oss.encore.model.mediafile.trimAudio
+import se.svt.oss.encore.api.input.AudioIn
+import se.svt.oss.encore.api.input.Input
+import se.svt.oss.encore.api.input.VideoIn
+import se.svt.oss.encore.api.mediafile.selectAudioStream
+import se.svt.oss.encore.api.mediafile.selectVideoStream
+import se.svt.oss.encore.api.mediafile.trimAudio
 import se.svt.oss.mediaanalyzer.MediaAnalyzer
 import se.svt.oss.mediaanalyzer.file.AudioFile
 import se.svt.oss.mediaanalyzer.file.VideoFile

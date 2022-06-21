@@ -6,13 +6,13 @@ package se.svt.oss.encore.model.profile
 
 import mu.KotlinLogging
 import se.svt.oss.encore.config.AudioMixPreset
-import se.svt.oss.encore.model.input.DEFAULT_AUDIO_LABEL
+import se.svt.oss.encore.api.input.DEFAULT_AUDIO_LABEL
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.input.analyzedAudio
-import se.svt.oss.encore.model.mediafile.AudioLayout
-import se.svt.oss.encore.model.mediafile.audioLayout
-import se.svt.oss.encore.model.mediafile.channelCount
-import se.svt.oss.encore.model.mediafile.toParams
+import se.svt.oss.encore.api.input.analyzedAudio
+import se.svt.oss.encore.api.mediafile.AudioLayout
+import se.svt.oss.encore.api.mediafile.audioLayout
+import se.svt.oss.encore.api.mediafile.channelCount
+import se.svt.oss.encore.api.mediafile.toParams
 import se.svt.oss.encore.model.output.AudioStreamEncode
 import se.svt.oss.encore.model.output.Output
 

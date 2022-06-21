@@ -19,3 +19,8 @@ tasks.withType<KotlinCompile> {
 repositories {
     mavenCentral()
 }
+
+dependencies {
+    implementation("se.svt.oss:media-analyzer:1.0.3")
+    implementation("io.github.microutils:kotlin-logging:2.1.21")
+}

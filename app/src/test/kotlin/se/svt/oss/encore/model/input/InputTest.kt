@@ -7,6 +7,14 @@ package se.svt.oss.encore.model.input
 import org.junit.jupiter.api.Test
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.Assertions.assertThatThrownBy
+import se.svt.oss.encore.api.input.AudioInput
+import se.svt.oss.encore.api.input.AudioVideoInput
+import se.svt.oss.encore.api.input.DEFAULT_VIDEO_LABEL
+import se.svt.oss.encore.api.input.VideoInput
+import se.svt.oss.encore.api.input.analyzedAudio
+import se.svt.oss.encore.api.input.analyzedVideo
+import se.svt.oss.encore.api.input.inputParams
+import se.svt.oss.encore.api.input.maxDuration
 import se.svt.oss.encore.multipleAudioFile
 import se.svt.oss.encore.defaultVideoFile
 

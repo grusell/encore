@@ -7,7 +7,7 @@ package se.svt.oss.encore
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.core.io.ClassPathResource
-import se.svt.oss.encore.model.input.AudioVideoInput
+import se.svt.oss.encore.api.input.AudioVideoInput
 import se.svt.oss.encore.model.EncoreJob
 import se.svt.oss.mediaanalyzer.file.AudioFile
 import se.svt.oss.mediaanalyzer.file.VideoFile
