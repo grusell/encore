@@ -15,9 +15,9 @@ import se.svt.oss.encore.api.input.AudioInput
 import se.svt.oss.encore.api.input.DEFAULT_AUDIO_LABEL
 import se.svt.oss.encore.api.input.DEFAULT_VIDEO_LABEL
 import se.svt.oss.encore.api.input.VideoInput
-import se.svt.oss.encore.model.output.AudioStreamEncode
-import se.svt.oss.encore.model.output.Output
-import se.svt.oss.encore.model.output.VideoStreamEncode
+import se.svt.oss.encore.api.output.AudioStreamEncode
+import se.svt.oss.encore.api.output.Output
+import se.svt.oss.encore.api.output.VideoStreamEncode
 import se.svt.oss.encore.model.profile.Profile
 import se.svt.oss.mediaanalyzer.file.AudioFile
 

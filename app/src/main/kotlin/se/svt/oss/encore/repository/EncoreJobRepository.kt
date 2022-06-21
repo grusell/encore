@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 
 @RepositoryRestResource
 @Tag(name = "encorejob")

@@ -10,7 +10,7 @@ import org.springframework.data.rest.core.annotation.HandleAfterCreate
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler
 import org.springframework.stereotype.Component
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.repository.EncoreJobRepository
 import se.svt.oss.encore.service.queue.QueueService
 

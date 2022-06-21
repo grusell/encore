@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: EUPL-1.2
 
-package se.svt.oss.encore.model
+package se.svt.oss.encore.api
 
 enum class Status(val isCompleted: Boolean) {
     NEW(false),

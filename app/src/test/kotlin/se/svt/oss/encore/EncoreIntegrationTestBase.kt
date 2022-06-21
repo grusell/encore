@@ -28,7 +28,7 @@ import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.config.EncoreProperties
 import se.svt.oss.encore.api.input.AudioVideoInput
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.model.callback.JobProgress
 import java.io.File
 import java.net.URI

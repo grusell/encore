@@ -1,37 +1,32 @@
-// SPDX-FileCopyrightText: 2020 Sveriges Television AB
-//
-// SPDX-License-Identifier: EUPL-1.2
-
-package se.svt.oss.encore.model.profile
+package se.svt.oss.encore.service.encodedto
 
 import mu.KotlinLogging
 import org.apache.commons.math3.fraction.Fraction
+import org.springframework.stereotype.Component
+import se.svt.oss.encore.api.AbstractEncoreJob
 import se.svt.oss.encore.api.EncodeDto
-import se.svt.oss.encore.config.AudioMixPreset
-import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.api.input.DEFAULT_VIDEO_LABEL
+import se.svt.oss.encore.api.EncodeDtoHandler
 import se.svt.oss.encore.api.input.analyzedVideo
 import se.svt.oss.encore.api.output.Output
 import se.svt.oss.encore.api.output.VideoStreamEncode
+import se.svt.oss.encore.model.profile.ThumbnailMapEncode
 import se.svt.oss.mediaanalyzer.file.stringValue
 import se.svt.oss.mediaanalyzer.file.toFractionOrNull
 import kotlin.io.path.createTempDirectory
 import kotlin.math.round
 
-data class ThumbnailMapEncode(
-    val tileWidth: Int = 160,
-    val tileHeight: Int = 90,
-    val cols: Int = 12,
-    val rows: Int = 20,
-    val optional: Boolean = true,
-    val suffix: String = "_${cols}x${rows}_${tileWidth}x${tileHeight}_thumbnail_map",
-    val format: String = "jpg",
-    val inputLabel: String = DEFAULT_VIDEO_LABEL
-) : EncodeDto {
-/*
+@Component
+class ThumbnailMapEncodeHandler: EncodeDtoHandler {
+    override val supportedEncodes = listOf(ThumbnailMapEncode::class.java)
+
+    override fun getOutput(encode: EncodeDto, job: AbstractEncoreJob): Output? {
+        if (encode !is ThumbnailMapEncode) throw IllegalArgumentException("Wrong type: ${encode.javaClass}")
+        return encode.getOutput(job)
+    }
+
     private val log = KotlinLogging.logger { }
 
-    override fun getOutput(job: EncoreJob, audioMixPresets: Map<String, AudioMixPreset>): Output? {
+    fun ThumbnailMapEncode.getOutput(job: AbstractEncoreJob): Output? {
         val videoStream = job.inputs.analyzedVideo(inputLabel)?.highestBitrateVideoStream
             ?: return logOrThrow("No input with label $inputLabel!")
         var numFrames = videoStream.numFrames
@@ -96,7 +91,7 @@ data class ThumbnailMapEncode(
         )
     }
 
-    private fun logOrThrow(message: String): Output? {
+    private fun ThumbnailMapEncode.logOrThrow(message: String): Output? {
         if (optional) {
             log.info { message }
             return null
@@ -104,6 +99,4 @@ data class ThumbnailMapEncode(
             throw RuntimeException(message)
         }
     }
-
- */
 }

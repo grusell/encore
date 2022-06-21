@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import se.svt.oss.encore.model.CancelEvent
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.repository.EncoreJobRepository
 import se.svt.oss.encore.service.queue.QueueService
 import java.util.UUID

@@ -11,7 +11,7 @@ import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import se.svt.oss.encore.model.EncoreJob
 import se.svt.oss.encore.api.input.maxDuration
-import se.svt.oss.encore.model.output.Output
+import se.svt.oss.encore.api.output.Output
 import se.svt.oss.encore.model.profile.Profile
 import se.svt.oss.encore.process.CommandBuilder
 import se.svt.oss.mediaanalyzer.MediaAnalyzer

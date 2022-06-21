@@ -7,15 +7,10 @@ package se.svt.oss.encore.api.input
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import io.swagger.v3.oas.annotations.media.Schema
-import se.svt.oss.encore.api.mediafile.toParams
 import se.svt.oss.mediaanalyzer.file.FractionString
 import se.svt.oss.mediaanalyzer.file.MediaContainer
 import se.svt.oss.mediaanalyzer.file.MediaFile
 import se.svt.oss.mediaanalyzer.file.VideoFile
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.Positive
-import javax.validation.constraints.PositiveOrZero
 
 const val TYPE_AUDIO_VIDEO = "AudioVideo"
 const val TYPE_AUDIO = "Audio"
@@ -32,97 +27,50 @@ const val DEFAULT_AUDIO_LABEL = "main"
     JsonSubTypes.Type(value = AudioInput::class, name = TYPE_AUDIO),
 )
 sealed interface Input {
-    @get:Schema(description = "URI of input file", required = true, example = "/path/to/file.mp4")
+   // @get:Schema(description = "URI of input file", required = true, example = "/path/to/file.mp4")
     val uri: String
 
-    @get:Schema(description = "Input params required to properly decode input", example = """{ "ac": "2" }""")
+   // @get:Schema(description = "Input params required to properly decode input", example = """{ "ac": "2" }""")
     val params: LinkedHashMap<String, String>
 
-    @get:Schema(description = "Type of input", allowableValues = [TYPE_AUDIO_VIDEO, TYPE_VIDEO, TYPE_AUDIO], required = true)
+   // @get:Schema(description = "Type of input", allowableValues = [TYPE_AUDIO_VIDEO, TYPE_VIDEO, TYPE_AUDIO], required = true)
     val type: String
 
-    @get:Schema(
-        description = "Analyzed model of the input file",
-        accessMode = Schema.AccessMode.READ_ONLY,
-        nullable = true
-    )
+
     var analyzed: MediaFile?
 }
 
 sealed interface AudioIn : Input {
 
-    @get:Schema(
-        description = "Label of the input to be matched with a profile output",
-        example = "dub", defaultValue = DEFAULT_AUDIO_LABEL
-    )
+
     val audioLabel: String
 
-    @get:Schema(
-        description = "Use only the number audio input streams up to the given value",
-        example = "2", nullable = true
-    )
-    @get:Positive
+
     val useFirstAudioStreams: Int?
 
-    @get:Schema(
-        description = "List of FFmpeg filters to apply to all audio outputs",
-        example = "to-do", defaultValue = "[]"
-    )
+
     val audioFilters: List<String>
 
     val analyzedAudio: MediaContainer
 
-    @get:Schema(
-        description = "The index of the audio stream to be used as input",
-        example = "1", nullable = true
-    )
-    @get:PositiveOrZero
+
     val audioStream: Int?
 }
 
 sealed interface VideoIn : Input {
-    @get:Schema(
-        description = "Label of the input to be matched with a profile output",
-        example = "sign", defaultValue = DEFAULT_VIDEO_LABEL
-    )
+
     val videoLabel: String
 
-    @get:Schema(
-        description = "The Display Aspect Ratio to use if the input is anamorphic." +
-            " Overrides DAR found from input metadata (for corrupt video metadata)",
-        example = "16:9", nullable = true
-    )
-    @get:Pattern(regexp = AR_REGEX, message = AR_MESSAGE)
     val dar: FractionString?
 
-    @get:Schema(
-        description = "Crop input video to given aspect ratio",
-        example = "1:1", nullable = true
-    )
-    @get:Pattern(regexp = AR_REGEX, message = AR_MESSAGE)
     val cropTo: FractionString?
 
-    @get:Schema(
-        description = "Pad input video to given aspect ratio",
-        example = "16:9", nullable = true
-    )
-    @get:Pattern(regexp = AR_REGEX, message = AR_MESSAGE)
     val padTo: FractionString?
 
-    @get:Schema(
-        description = "List of FFmpeg filters to apply to all video outputs",
-        example = "proxy=filter_path=/ffmpeg-filters/libsvg_filter.so:config='svg=/path/logo-white.svg",
-        defaultValue = "[]"
-    )
     val videoFilters: List<String>
 
     val analyzedVideo: VideoFile
 
-    @get:Schema(
-        description = "The index of the video stream to be used as input",
-        example = "1", nullable = true
-    )
-    @get:PositiveOrZero
     val videoStream: Int?
     val probeInterlaced: Boolean
 }
@@ -238,3 +186,8 @@ fun List<Input>.analyzedVideo(label: String): VideoFile? {
         .find { it.videoLabel == label }
         ?.analyzedVideo
 }
+
+fun Map<String, Any?>.toParams(): List<String> =
+    flatMap { entry ->
+        listOfNotNull("-${entry.key}", entry.value?.let { "$it" })
+    }

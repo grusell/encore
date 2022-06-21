@@ -1,14 +1,10 @@
-// SPDX-FileCopyrightText: 2020 Sveriges Television AB
-//
-// SPDX-License-Identifier: EUPL-1.2
-
-package se.svt.oss.encore.model.profile
+package se.svt.oss.encore.service.encodedto
 
 import mu.KotlinLogging
+import org.springframework.stereotype.Component
+import se.svt.oss.encore.api.AbstractEncoreJob
 import se.svt.oss.encore.api.EncodeDto
-import se.svt.oss.encore.config.AudioMixPreset
-import se.svt.oss.encore.api.input.DEFAULT_AUDIO_LABEL
-import se.svt.oss.encore.model.EncoreJob
+import se.svt.oss.encore.api.EncodeDtoHandler
 import se.svt.oss.encore.api.input.analyzedAudio
 import se.svt.oss.encore.api.mediafile.AudioLayout
 import se.svt.oss.encore.api.mediafile.audioLayout
@@ -16,25 +12,25 @@ import se.svt.oss.encore.api.mediafile.channelCount
 import se.svt.oss.encore.api.mediafile.toParams
 import se.svt.oss.encore.api.output.AudioStreamEncode
 import se.svt.oss.encore.api.output.Output
+import se.svt.oss.encore.config.AudioMixPreset
+import se.svt.oss.encore.config.EncoreProperties
+import se.svt.oss.encore.model.profile.AudioEncode
 
-data class AudioEncode(
-    val codec: String = "libfdk_aac",
-    val bitrate: String? = null,
-    val samplerate: Int = 48000,
-    val channels: Int = 2,
-    val suffix: String = "_${codec}_${channels}ch",
-    val params: LinkedHashMap<String, String> = linkedMapOf(),
-    val filters: List<String> = emptyList(),
-    val audioMixPreset: String = "default",
-    val optional: Boolean = false,
-    val format: String = "mp4",
-    val inputLabel: String = DEFAULT_AUDIO_LABEL,
-) : EncodeDto {
+@Component
+class AudioEncodeHandler(encoreProperties: EncoreProperties): EncodeDtoHandler {
 
-    /*
+    val  audioMixPresets = encoreProperties.audioMixPresets
+
+    override val supportedEncodes = listOf(AudioEncode::class.java)
+
+    override fun getOutput(encode: EncodeDto, job: AbstractEncoreJob): Output? {
+        if (encode !is AudioEncode) throw IllegalArgumentException("Wrong type: ${encode.javaClass}")
+        return encode.getOutput(job)
+    }
+
     private val log = KotlinLogging.logger { }
 
-    override fun getOutput(job: EncoreJob, audioMixPresets: Map<String, AudioMixPreset>): Output? {
+    fun AudioEncode.getOutput(job: AbstractEncoreJob): Output? {
         val outputName = "${job.baseName}$suffix.$format"
         val analyzed = job.inputs.analyzedAudio(inputLabel)
             ?: return logOrThrow("Can not generate $outputName! No audio input with label '$inputLabel'.")
@@ -74,16 +70,16 @@ data class AudioEncode(
         )
     }
 
-    private fun filtersToString(pan: String?): String? {
+    private fun AudioEncode.filtersToString(pan: String?): String? {
         val allFilters = pan?.let { listOf("pan=$it") + filters } ?: filters
         return if (allFilters.isEmpty()) null else allFilters.joinToString(",")
     }
 
-    private fun isApplicable(channelCount: Int): Boolean {
+    private fun AudioEncode.isApplicable(channelCount: Int): Boolean {
         return channelCount > 0 && (channels == 2 || channels in 1..channelCount)
     }
 
-    private fun logOrThrow(message: String): Output? {
+    private fun AudioEncode.logOrThrow(message: String): Output? {
         if (optional) {
             log.info { message }
             return null
@@ -91,7 +87,4 @@ data class AudioEncode(
             throw RuntimeException(message)
         }
     }
-
-
-     */
 }

@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.defaultVideoFile
 import se.svt.oss.encore.defaultEncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.repository.EncoreJobRepository
 import se.svt.oss.encore.service.queue.QueueService
 import se.svt.oss.mediaanalyzer.MediaAnalyzer

@@ -4,10 +4,12 @@
 
 package se.svt.oss.encore.model.profile
 
+import se.svt.oss.encore.api.EncodeDto
+
 data class Profile(
     val name: String,
     val description: String,
-    val encodes: List<OutputProducer>,
+    val encodes: List<EncodeDto>,
     val scaling: String? = "bicubic",
     val deinterlaceFilter: String = "yadif"
 )

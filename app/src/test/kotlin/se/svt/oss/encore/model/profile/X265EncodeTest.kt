@@ -24,7 +24,7 @@ class X265EncodeTest : VideoEncodeTest<X265Encode>() {
         audioEncode = audioEncode,
         suffix = "-x265"
     )
-
+/*
     override fun verifyFirstPassParams(encode: VideoEncode, params: List<String>) {
         if (encode.twoPass) {
             assertThat(params)
@@ -50,4 +50,6 @@ class X265EncodeTest : VideoEncodeTest<X265Encode>() {
                 .noneSatisfy { assertThat(it).contains("pass=2:stats=log-x265") }
         }
     }
+
+ */
 }

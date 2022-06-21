@@ -24,13 +24,14 @@ import java.util.Locale
 class ProfileService(
     @Value("\${profile.location}")
     private val profileLocation: Resource,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    yamlMapper: YAMLMapper
 ) {
     private val log = KotlinLogging.logger { }
 
     private val mapper =
         if (profileLocation.filename?.let { File(it).extension.lowercase(Locale.getDefault()) in setOf("yml", "yaml") } == true)
-            yamlMapper() else objectMapper
+            yamlMapper else objectMapper
 
     @Retryable(
         include = [IOException::class],
@@ -59,6 +60,4 @@ class ProfileService(
         return mapper.readValue(profile.inputStream)
     }
 
-    private fun yamlMapper() =
-        YAMLMapper().findAndRegisterModules().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 }

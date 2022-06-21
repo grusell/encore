@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import se.svt.oss.encore.defaultEncoreJob
 import se.svt.oss.encore.model.CancelEvent
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.model.queue.QueueItem
 import se.svt.oss.encore.repository.EncoreJobRepository
 import se.svt.oss.encore.service.queue.QueueService

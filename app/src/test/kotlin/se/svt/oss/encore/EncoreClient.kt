@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.model.queue.QueueItem
 
 @FeignClient("encore", url = "http://localhost:\${server.port}")

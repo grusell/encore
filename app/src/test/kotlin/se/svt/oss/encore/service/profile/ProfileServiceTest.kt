@@ -6,6 +6,7 @@ package se.svt.oss.encore.service.profile
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.core.io.ClassPathResource
@@ -16,10 +17,11 @@ class ProfileServiceTest {
 
     private lateinit var profileService: ProfileService
     private val objectMapper = ObjectMapper().findAndRegisterModules()
+    private val yamlMapper = YAMLMapper().findAndRegisterModules() as YAMLMapper
 
     @BeforeEach
     internal fun setUp() {
-        profileService = ProfileService(ClassPathResource("profile/profiles.yml"), objectMapper)
+        profileService = ProfileService(ClassPathResource("profile/profiles.yml"), objectMapper, yamlMapper)
     }
 
     @Test
@@ -53,7 +55,7 @@ class ProfileServiceTest {
 
     @Test
     fun `unreachable profiles throws error`() {
-        profileService = ProfileService(ClassPathResource("nonexisting.yml"), objectMapper)
+        profileService = ProfileService(ClassPathResource("nonexisting.yml"), objectMapper, yamlMapper)
         assertThatThrownBy { profileService.getProfile("test-profile") }
             .isInstanceOf(IOException::class.java)
             .hasMessage("class path resource [nonexisting.yml] cannot be opened because it does not exist")

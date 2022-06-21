@@ -1,34 +1,30 @@
-// SPDX-FileCopyrightText: 2020 Sveriges Television AB
-//
-// SPDX-License-Identifier: EUPL-1.2
-
-package se.svt.oss.encore.model.profile
+package se.svt.oss.encore.service.encodedto
 
 import mu.KotlinLogging
+import org.springframework.stereotype.Component
+import se.svt.oss.encore.api.AbstractEncoreJob
 import se.svt.oss.encore.api.EncodeDto
-import se.svt.oss.encore.config.AudioMixPreset
-import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.api.input.DEFAULT_VIDEO_LABEL
+import se.svt.oss.encore.api.EncodeDtoHandler
 import se.svt.oss.encore.api.input.analyzedVideo
 import se.svt.oss.encore.api.mediafile.toParams
 import se.svt.oss.encore.api.output.Output
 import se.svt.oss.encore.api.output.VideoStreamEncode
+import se.svt.oss.encore.model.profile.ThumbnailEncode
 import se.svt.oss.mediaanalyzer.file.toFractionOrNull
 import kotlin.math.round
 
-data class ThumbnailEncode(
-    val percentages: List<Int> = listOf(25, 50, 75),
-    val thumbnailWidth: Int = -2,
-    val thumbnailHeight: Int = 1080,
-    val quality: Int = 5,
-    val suffix: String = "_thumb",
-    val inputLabel: String = DEFAULT_VIDEO_LABEL,
-    val optional: Boolean = false
-) : EncodeDto {
-/*
+@Component
+class ThumbnailEncodeHandler: EncodeDtoHandler {
+    override val supportedEncodes = listOf(ThumbnailEncode::class.java)
+
+    override fun getOutput(encode: EncodeDto, job: AbstractEncoreJob): Output? {
+        if (encode !is ThumbnailEncode) throw IllegalArgumentException("Wrong type: ${encode.javaClass}")
+        return encode.getOutput(job)
+    }
+
     private val log = KotlinLogging.logger { }
 
-    override fun getOutput(job: EncoreJob, audioMixPresets: Map<String, AudioMixPreset>): Output? {
+   fun ThumbnailEncode.getOutput(job: AbstractEncoreJob): Output? {
         val videoStream = job.inputs.analyzedVideo(inputLabel)?.highestBitrateVideoStream
             ?: return logOrThrow("Can not produce thumbnail $suffix. No video input with label $inputLabel!")
 
@@ -73,7 +69,7 @@ data class ThumbnailEncode(
         )
     }
 
-    private fun logOrThrow(message: String): Output? {
+    private fun ThumbnailEncode.logOrThrow(message: String): Output? {
         if (optional) {
             log.info { message }
             return null
@@ -81,5 +77,4 @@ data class ThumbnailEncode(
             throw RuntimeException(message)
         }
     }
-    */
 }

@@ -29,9 +29,10 @@ import se.svt.oss.encore.cancellation.CancellationListener
 import se.svt.oss.encore.config.EncoreProperties
 import se.svt.oss.encore.model.CancelEvent
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.repository.EncoreJobRepository
 import se.svt.oss.encore.service.callback.CallbackService
+import se.svt.oss.encore.service.encodedto.OutputProducer2
 import se.svt.oss.encore.service.localencode.LocalEncodeService
 import se.svt.oss.encore.service.mediaanalyzer.MediaAnalyzerService
 import se.svt.oss.encore.service.profile.ProfileService
@@ -51,7 +52,8 @@ class EncoreService(
     private val redisKeyValueTemplate: RedisKeyValueTemplate,
     private val mediaAnalyzerService: MediaAnalyzerService,
     private val localEncodeService: LocalEncodeService,
-    private val encoreProperties: EncoreProperties
+    private val encoreProperties: EncoreProperties,
+    private val outputProducer2: OutputProducer2
 ) {
 
     private val log = KotlinLogging.logger {}
@@ -81,10 +83,7 @@ class EncoreService(
             outputFolder = localEncodeService.outputFolder(encoreJob)
 
             val outputs = profile.encodes.mapNotNull {
-                it.getOutput(
-                    encoreJob,
-                    encoreProperties.audioMixPresets
-                )
+                outputProducer2.getOutput(it, encoreJob)
             }
 
             check(outputs.distinctBy { it.id }.size == outputs.size) {

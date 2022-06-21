@@ -16,7 +16,7 @@ import se.svt.oss.junit5.redis.EmbeddedRedisExtension
 import se.svt.oss.randomportinitializer.RandomPortInitializer
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.model.EncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import java.net.URI
 import java.time.OffsetDateTime
 import java.util.UUID

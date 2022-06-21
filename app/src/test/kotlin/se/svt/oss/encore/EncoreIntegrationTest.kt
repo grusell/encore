@@ -11,7 +11,7 @@ import org.junit.jupiter.api.io.TempDir
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import se.svt.oss.encore.Assertions.assertThat
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.api.input.AudioInput
 import se.svt.oss.encore.api.input.VideoInput
 import se.svt.oss.encore.model.queue.QueueItem

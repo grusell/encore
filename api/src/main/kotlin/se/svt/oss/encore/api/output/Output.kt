@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: EUPL-1.2
 
-package se.svt.oss.encore.model.output
+package se.svt.oss.encore.api.output
 
 import java.io.File
 

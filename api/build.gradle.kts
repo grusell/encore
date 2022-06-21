@@ -23,4 +23,6 @@ repositories {
 dependencies {
     implementation("se.svt.oss:media-analyzer:1.0.3")
     implementation("io.github.microutils:kotlin-logging:2.1.21")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.2")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.2")
 }

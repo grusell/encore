@@ -25,7 +25,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.config.EncoreProperties
 import se.svt.oss.encore.defaultEncoreJob
-import se.svt.oss.encore.model.Status
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.model.queue.QueueItem
 import se.svt.oss.encore.repository.EncoreJobRepository
 import se.svt.oss.encore.service.EncoreService

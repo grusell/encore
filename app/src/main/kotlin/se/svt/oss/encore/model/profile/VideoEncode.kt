@@ -4,13 +4,14 @@
 
 package se.svt.oss.encore.model.profile
 
+import se.svt.oss.encore.api.EncodeDto
 import se.svt.oss.encore.config.AudioMixPreset
 import se.svt.oss.encore.model.EncoreJob
 import se.svt.oss.encore.api.mediafile.toParams
-import se.svt.oss.encore.model.output.Output
-import se.svt.oss.encore.model.output.VideoStreamEncode
+import se.svt.oss.encore.api.output.Output
+import se.svt.oss.encore.api.output.VideoStreamEncode
 
-interface VideoEncode : OutputProducer {
+interface VideoEncode : EncodeDto {
     val width: Int?
     val height: Int?
     val twoPass: Boolean
@@ -23,6 +24,7 @@ interface VideoEncode : OutputProducer {
     val codec: String
     val inputLabel: String
 
+    /*
     override fun getOutput(job: EncoreJob, audioMixPresets: Map<String, AudioMixPreset>): Output? {
         val audioEncodesToUse = audioEncodes.ifEmpty { listOfNotNull(audioEncode) }
         val audio = audioEncodesToUse.flatMap { it.getOutput(job, audioMixPresets)?.audioStreams.orEmpty() }
@@ -68,4 +70,6 @@ interface VideoEncode : OutputProducer {
         }
         return if (videoFilters.isEmpty()) null else videoFilters.joinToString(",")
     }
+
+     */
 }

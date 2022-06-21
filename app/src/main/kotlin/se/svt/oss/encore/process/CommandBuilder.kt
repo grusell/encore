@@ -14,9 +14,9 @@ import se.svt.oss.encore.api.input.inputParams
 import se.svt.oss.encore.api.mediafile.AudioLayout
 import se.svt.oss.encore.api.mediafile.audioLayout
 import se.svt.oss.encore.api.mediafile.channelCount
-import se.svt.oss.encore.model.output.AudioStreamEncode
-import se.svt.oss.encore.model.output.Output
-import se.svt.oss.encore.model.output.VideoStreamEncode
+import se.svt.oss.encore.api.output.AudioStreamEncode
+import se.svt.oss.encore.api.output.Output
+import se.svt.oss.encore.api.output.VideoStreamEncode
 import se.svt.oss.encore.model.profile.Profile
 import se.svt.oss.mediaanalyzer.file.MediaContainer
 import se.svt.oss.mediaanalyzer.file.VideoFile
@@ -204,7 +204,7 @@ class CommandBuilder(
             seekParams(output) +
             "-an" +
             durationParams(output) +
-            output.video.firstPassParams +
+            output.video!!.firstPassParams +
             listOf("-f", output.format, "/dev/null")
     }
 

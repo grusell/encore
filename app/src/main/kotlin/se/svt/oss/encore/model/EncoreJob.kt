@@ -11,6 +11,8 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed
 import org.springframework.validation.annotation.Validated
+import se.svt.oss.encore.api.AbstractEncoreJob
+import se.svt.oss.encore.api.Status
 import se.svt.oss.encore.api.input.Input
 import se.svt.oss.mediaanalyzer.file.MediaFile
 import java.net.URI
@@ -31,34 +33,34 @@ data class EncoreJob(
         description = "The Encore Internal EncoreJob Identity", example = "fb2baa17-8972-451b-bb1e-1bc773283476",
         accessMode = Schema.AccessMode.READ_ONLY, hidden = false, defaultValue = "A random UUID"
     )
-    @Id val id: UUID = UUID.randomUUID(),
+    @Id override val id: UUID = UUID.randomUUID(),
 
     @Schema(
         description = "External id - for external backreference", example = "any-string",
         nullable = true
     )
-    val externalId: String? = null,
+    override val externalId: String? = null,
 
     @Schema(
         description = "The name of the encoding profile to use",
         example = "x264-animated", required = true
     )
     @NotBlank
-    val profile: String,
+    override val profile: String,
 
     @Schema(
         description = "A directory path to where the output should be written",
         example = "/an/output/path/dir", required = true
     )
     @NotBlank
-    val outputFolder: String,
+    override val outputFolder: String,
 
     @Schema(
         description = "Base filename of output files",
         example = "any_file", required = true
     )
     @NotBlank
-    val baseName: String,
+    override val baseName: String,
 
     @Schema(
         description = "The Creation date for the EncoreJob",
@@ -66,13 +68,13 @@ data class EncoreJob(
         defaultValue = "now()"
     )
     @Indexed
-    val createdDate: OffsetDateTime = OffsetDateTime.now(),
+    override val createdDate: OffsetDateTime = OffsetDateTime.now(),
 
     @Schema(
         description = "An url to which the progress status callback should be directed",
         example = "http://projectx/encorecallback", nullable = true
     )
-    val progressCallbackUri: URI? = null,
+    override val progressCallbackUri: URI? = null,
 
     @Schema(
         description = "The queue priority of the EncoreJob",
@@ -80,65 +82,65 @@ data class EncoreJob(
     )
     @Min(0)
     @Max(100)
-    val priority: Int = 0,
+    override val priority: Int = 0,
 
     @Schema(
         description = "The exception message, if the EncoreJob failed",
         example = "input/output error", accessMode = Schema.AccessMode.READ_ONLY, nullable = true
     )
-    var message: String? = null,
+    override var message: String? = null,
 
     @Schema(
         description = "The EncoreJob progress",
         example = "57", accessMode = Schema.AccessMode.READ_ONLY, defaultValue = "0"
     )
-    var progress: Int = 0,
+    override var progress: Int = 0,
 
     @Schema(
         description = "The Encoding speed of the job (compared to it's play speed/input duration)",
         example = "0.334", accessMode = Schema.AccessMode.READ_ONLY, nullable = true
     )
-    var speed: Double? = null,
+    override var speed: Double? = null,
 
     @Schema(
         description = "The time for when the EncoreJob was picked from the queue)",
         example = "2021-04-19T07:20:43.819141+02:00", accessMode = Schema.AccessMode.READ_ONLY, nullable = true
     )
-    var startedDate: OffsetDateTime? = null,
+    override var startedDate: OffsetDateTime? = null,
 
     @Schema(
         description = "The time for when the EncoreJob was completed (fail or success)",
         example = "2021-04-19T07:20:43.819141+02:00", accessMode = Schema.AccessMode.READ_ONLY, nullable = true
     )
-    var completedDate: OffsetDateTime? = null,
+    override var completedDate: OffsetDateTime? = null,
 
     @Schema(
         description = "Instruct Encore to overlay encoding metadata on the encoded video stream",
         defaultValue = "false"
     )
-    val debugOverlay: Boolean = false,
+    override val debugOverlay: Boolean = false,
 
     @Schema(
         description = "Key/Values to append to the MDC log context", defaultValue = "{}"
     )
-    val logContext: Map<String, String> = emptyMap(),
+    override val logContext: Map<String, String> = emptyMap(),
 
     @Schema(description = "Seek to given time in seconds before encoding output.", nullable = true, example = "60.0")
-    val seekTo: Double? = null,
+    override val seekTo: Double? = null,
 
     @Schema(description = "Limit output to given duration.", nullable = true, example = "60.0")
-    val duration: Double? = null,
+    override val duration: Double? = null,
 
     @Schema(
         description = "Time in seconds for when the thumbnail should be picked. Overrides profile configuration for thumbnails",
         example = "1800.5", nullable = true
     )
     @Positive
-    val thumbnailTime: Double? = null,
+    override val thumbnailTime: Double? = null,
 
     @NotEmpty
-    val inputs: List<Input> = emptyList()
-) {
+    override val inputs: List<Input> = emptyList()
+): AbstractEncoreJob {
 
     @Schema(
         description = "Analyzed models of the output files",
@@ -152,7 +154,7 @@ data class EncoreJob(
     )
 
     @Indexed
-    var status = Status.NEW
+    override var status = Status.NEW
         set(value) {
             field = value
             if (value.isCompleted) {
