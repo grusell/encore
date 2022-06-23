@@ -5,7 +5,6 @@
 package se.svt.oss.encore.api
 
 import se.svt.oss.encore.api.input.Input
-import se.svt.oss.mediaanalyzer.file.MediaFile
 import java.net.URI
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -35,7 +34,6 @@ interface AbstractEncoreJob {
 
     var startedDate: OffsetDateTime?
 
-
     var completedDate: OffsetDateTime?
 
     val debugOverlay: Boolean
@@ -51,5 +49,4 @@ interface AbstractEncoreJob {
     val inputs: List<Input>
 
     var status: Status
-
 }

@@ -27,32 +27,27 @@ const val DEFAULT_AUDIO_LABEL = "main"
     JsonSubTypes.Type(value = AudioInput::class, name = TYPE_AUDIO),
 )
 sealed interface Input {
-   // @get:Schema(description = "URI of input file", required = true, example = "/path/to/file.mp4")
+    // @get:Schema(description = "URI of input file", required = true, example = "/path/to/file.mp4")
     val uri: String
 
-   // @get:Schema(description = "Input params required to properly decode input", example = """{ "ac": "2" }""")
+    // @get:Schema(description = "Input params required to properly decode input", example = """{ "ac": "2" }""")
     val params: LinkedHashMap<String, String>
 
-   // @get:Schema(description = "Type of input", allowableValues = [TYPE_AUDIO_VIDEO, TYPE_VIDEO, TYPE_AUDIO], required = true)
+    // @get:Schema(description = "Type of input", allowableValues = [TYPE_AUDIO_VIDEO, TYPE_VIDEO, TYPE_AUDIO], required = true)
     val type: String
-
 
     var analyzed: MediaFile?
 }
 
 sealed interface AudioIn : Input {
 
-
     val audioLabel: String
 
-
     val useFirstAudioStreams: Int?
-
 
     val audioFilters: List<String>
 
     val analyzedAudio: MediaContainer
-
 
     val audioStream: Int?
 }

@@ -5,8 +5,8 @@ plugins {
     jacoco
     id("org.springframework.boot") version "2.6.6"
     id("se.ascp.gradle.gradle-versions-filter") version "0.1.10"
-    kotlin("jvm") version "1.6.20"
-    kotlin("plugin.spring") version "1.6.20"
+    kotlin("jvm")
+    kotlin("plugin.spring")
     id("com.github.fhermansson.assertj-generator") version "1.1.4"
     id("org.jmailen.kotlinter") version "3.9.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
@@ -100,6 +100,9 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    implementation("org.pf4j:pf4j:3.6.0")
+    implementation("org.pf4j:pf4j-spring:0.7.0")
+
     //openapi generation
     implementation("org.springdoc:springdoc-openapi-ui:1.5.10")
     implementation("org.springdoc:springdoc-openapi-kotlin:1.5.10")
@@ -128,6 +131,14 @@ val integrationTestsPreReq = setOf("mediainfo", "ffmpeg", "ffprobe").map {
         if (!it.equals("mediainfo")) {
             args("-hide_banner")
         }
+    }
+}
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    manifest {
+        attributes(
+            "Main-Class" to "org.springframework.boot.loader.PropertiesLauncher",
+            "Loader-Path" to "encore-extensions")
     }
 }
 
