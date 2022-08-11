@@ -63,5 +63,32 @@ class EncoreJobControllerTest {
 
             verifySequence { encoreJobService.getJobsSortedByCreatedDate(eq(10L)) }
         }
+
+        @Test
+        fun getRecentJobsDefault() {
+            val jobs = listOf(
+                EncoreJob(
+                    id = UUID.randomUUID(),
+                    externalId = "1",
+                    profile = "animerat",
+                    outputFolder = "/shares/test",
+                    baseName = "test"
+                ),
+                EncoreJob(
+                    id = UUID.randomUUID(),
+                    externalId = "2",
+                    profile = "animerat",
+                    outputFolder = "/shares/test",
+                    baseName = "test"
+                )
+            )
+            every { encoreJobService.getJobsSortedByCreatedDate(any()) } returns jobs
+
+            mockMvc.perform(get("/encoreRecentJobs"))
+                .andExpect(status().is2xxSuccessful)
+                .andExpect(content().json(objectMapper.writeValueAsString(jobs)))
+
+            verifySequence { encoreJobService.getJobsSortedByCreatedDate(eq(20L)) }
+        }
     }
 }

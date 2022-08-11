@@ -23,5 +23,5 @@ class EncoreJobController(
         description = "Returns a list of Encore Jobs ordered by created date (descending)"
     )
     @GetMapping("/encoreRecentJobs")
-    fun getRecentJobs(@RequestParam amount: Long = 20L) = encoreJobService.getJobsSortedByCreatedDate(amount)
+    fun getRecentJobs(@RequestParam(defaultValue = "20") amount: Long) = encoreJobService.getJobsSortedByCreatedDate(amount)
 }
