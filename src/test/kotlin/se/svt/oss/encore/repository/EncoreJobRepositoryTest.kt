@@ -12,11 +12,11 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import se.svt.oss.junit5.redis.EmbeddedRedisExtension
-import se.svt.oss.randomportinitializer.RandomPortInitializer
 import se.svt.oss.encore.Assertions.assertThat
 import se.svt.oss.encore.model.EncoreJob
 import se.svt.oss.encore.model.Status
+import se.svt.oss.junit5.redis.EmbeddedRedisExtension
+import se.svt.oss.randomportinitializer.RandomPortInitializer
 import java.net.URI
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -48,12 +48,16 @@ class EncoreJobRepositoryTest {
     }
 
     private fun createAndSaveJob(url: String, status: Status) {
+        createAndSaveJob(url, status, OffsetDateTime.now())
+    }
+
+    private fun createAndSaveJob(url: String, status: Status, createdDate: OffsetDateTime) {
         val encoreJob = EncoreJob(
             id = UUID.randomUUID(),
             externalId = "externalId",
             profile = "animerat",
             outputFolder = "/shares/test",
-            createdDate = OffsetDateTime.now(),
+            createdDate = createdDate,
             progressCallbackUri = URI.create(url),
             baseName = "test"
         )
